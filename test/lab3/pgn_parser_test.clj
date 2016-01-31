@@ -27,6 +27,7 @@
                 "35.fxe5 Qxc3 36.Rxc3 Rxd4 37.b4 Bc4 38.Kf2 g5 39.Re3 Be6"
                 "40.Rc3 Bc4 41.Re3 Rd2+ 42.Ke1 Rd3 43.Kf2 Kg6 44.Rxd3 Bxd3"
                 "45.Ke3 Bc2 46.Kd4 Kf5 47.Kd5 h5 0-1"]))
+
 (def example-moves
   (string/join "\n"
                ["1.e4 e5 2.Nf3 Nf6 3.Nc3 Nc6 4.d4 exd4 5.Nxd4 Bb4 6.Nxc6 bxc6"
@@ -69,5 +70,5 @@
   (is (= {:move-type :move, :to :e2, :type :rook} (parse-move "Re2")))
   (is (= {:move-type :move, :to :a8, :type :knight, :check? true} (parse-move "Na8+")))
   (is (= {:move-type :move, :to :d1, :promotion :queen, :check? true} (parse-move "d1=Q+")))
-  (is (= {:move-type :take, :to :d3, :from :c} (parse-move "cxd3")))
-  (is (= {:move-type :take, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3"))))
+  (is (= {:move-type :move, :take? true, :to :d3, :from :c} (parse-move "cxd3")))
+  (is (= {:move-type :move, :take? true, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3"))))

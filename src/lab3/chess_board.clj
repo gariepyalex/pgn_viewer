@@ -166,9 +166,13 @@
   [board {:keys [color]}]
   (if (= :white color)
     (-> board
+        (assoc :h1 nil)
+        (assoc :e1 nil)
         (assoc :g1 {:type :king :color :white})
         (assoc :f1 {:type :rook :color :white}))
     (-> board
+        (assoc :h8 nil)
+        (assoc :e8 nil)
         (assoc :g8 {:type :king :color :black})
         (assoc :f8 {:type :rook :color :black}))))
 
@@ -177,18 +181,25 @@
   [board {:keys [color]}]
   (if (= :white color)
     (-> board
+        (assoc :a1 nil)
+        (assoc :e1 nil)
         (assoc :c1 {:type :king :color :white})
         (assoc :d1 {:type :rook :color :white}))
     (-> board
+        (assoc :a8 nil)
+        (assoc :e8 nil)
         (assoc :c8 {:type :king :color :black})
         (assoc :d8 {:type :rook :color :black}))))
 
 (defmethod move
   :move
-  [board {:as move :keys [color type to from take?] :or {type :pawn}}]
+  [board {:as move :keys [color type to from take? promotion] :or {type :pawn}}]
   (let [[from piece] (if (contains? valid-positions from)
                        [from (get board from)]
                        (piece-that-moves board color type to take? (when (contains? column-names from) from)))]
       (-> board
           (assoc from nil)
-          (assoc to piece))))
+          (assoc to piece)
+          (#(if promotion
+              (assoc-in % [to :type] promotion)
+              %)))))
