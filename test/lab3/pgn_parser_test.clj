@@ -63,3 +63,11 @@
 
   (testing "Can extract all moves in example moves"
     (is (= 47 (count (re-seq move-regex example-moves))))))
+
+
+(deftest parse-move-test
+  (is (= {:move-type :move, :to :e2, :type :rook} (parse-move "Re2")))
+  (is (= {:move-type :move, :to :a8, :type :knight, :check? true} (parse-move "Na8+")))
+  (is (= {:move-type :move, :to :d1, :promotion :queen, :check? true} (parse-move "d1=Q+")))
+  (is (= {:move-type :take, :to :d3, :from :c} (parse-move "cxd3")))
+  (is (= {:move-type :take, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3"))))
