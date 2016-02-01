@@ -71,4 +71,6 @@
   (is (= {:move-type :move, :to :a8, :type :knight, :check? true} (parse-move "Na8+")))
   (is (= {:move-type :move, :to :d1, :promotion :queen, :check? true} (parse-move "d1=Q+")))
   (is (= {:move-type :move, :take? true, :to :d3, :from :c} (parse-move "cxd3")))
-  (is (= {:move-type :move, :take? true, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3"))))
+  (is (= {:move-type :move, :take? true, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3")))
+  (is (= {:move-type :move, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2d3")))
+  (is (= {:move-type :move, :to :d7, :from :c, :type :queen} (parse-move "Qcd7"))))
