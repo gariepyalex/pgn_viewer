@@ -1,14 +1,8 @@
 # lab3
 
-A Clojure library designed to ... well, that part is up to you.
+To run:
+```
+lein run
+```
 
-## Usage
-
-FIXME
-
-## License
-
-Copyright © 2016 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+This starts an example game. You can specify the path of a pgn file as an argument.

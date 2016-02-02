@@ -62,6 +62,12 @@
           expected-move-count 4]
       (is (= expected-move-count (count (re-seq move-regex moves))))))
 
+  (testing "Comments are ignored"
+    (let [moves               "44.Rxd3 {!} Bxd3 45.Kd5 {interesting response to 44.} h5"
+          expected-move-count 2
+          parsed-moves        (re-seq move-regex moves)]
+      (is (= expected-move-count (count parsed-moves)))))
+
   (testing "Can extract all moves in example moves"
     (is (= 47 (count (re-seq move-regex example-moves))))))
 
@@ -73,4 +79,5 @@
   (is (= {:move-type :move, :take? true, :to :d3, :from :c} (parse-move "cxd3")))
   (is (= {:move-type :move, :take? true, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2xd3")))
   (is (= {:move-type :move, :to :d3, :from :c2, :type :bishop} (parse-move "Bc2d3")))
+  (is (true? (:checkmate? (parse-move "Bc2#"))))
   (is (= {:move-type :move, :to :d7, :from :c, :type :queen} (parse-move "Qcd7"))))

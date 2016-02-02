@@ -1,6 +1,14 @@
-(ns lab3.core)
+(ns lab3.core
+  (:require [clojure.java.io :as io]
+            [lab3.pgn-parser :as parser]
+            [lab3.game-display :as display]))
 
-(defn foo
-  "I don't do a whole lot."
-  [x]
-  (println x "Hello, World!"))
+(def default-game (io/resource "byrne_fischer_1956.pgn"))
+
+(defn -main
+  [& [path]]
+  (let [file-path  (or path default-game)
+        pgn-string (slurp (io/file file-path))]
+    (-> pgn-string
+        parser/parse-pgn
+        display/show-game)))

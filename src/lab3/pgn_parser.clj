@@ -1,9 +1,9 @@
 (ns lab3.pgn-parser
   (:require [lab3.chess-board :as chess]))
 
-(def game-without-metadata-regex #"(?:\[.*\]\s)*([^\[\]]*)")
-(def move-regex #"\d+\.\s?(\S+)\s([^01]\S+)?")
-(def move-detail-regex #"([KQNBR]?)([a-h]?[1-8]?)(x?)([a-h][1-8])=?([KQNBR]?)(\+?)")
+(def game-without-metadata-regex #"(?:[\s\t\r\n]?\[.*\]\s[\s\t\r\n]?)*([^\[\]]*)")
+(def move-regex #"\d+\.\s?([KQNBRa-h1-8x+#=O-]+)\s(?:\{[^\}]*\})?\s?([KQNBRa-h1-8x+#=O-]\S+)?\s?(?:\{[^\}]*\})?")
+(def move-detail-regex #"([KQNBR]?)([a-h]?[1-8]?)(x?)([a-h][1-8])=?([KQNBR]?)(\+?)(#?)")
 
 (defn remove-metadata
   [pgn-string]
@@ -29,14 +29,15 @@
     {:move-type :queenside-castle}
 
     :else
-    (let [[_ type from take? to promotion check?] (re-matches move-detail-regex move-string)]
+    (let [[_ type from take? to promotion check? checkmate?] (re-matches move-detail-regex move-string)]
       (cond-> {:move-type :move}
-        (not (empty? type))      (assoc :type (parse-type type))
-        (not (empty? from))      (assoc :from (keyword from))
+        (not (empty? type))       (assoc :type (parse-type type))
+        (not (empty? from))       (assoc :from (keyword from))
         (not (empty? take?))      (assoc :take? true)
-        (not (empty? to))        (assoc :to (keyword to))
-        (not (empty? promotion)) (assoc :promotion (parse-type promotion))
-        (not (empty? check?))    (assoc :check? true)))))
+        (not (empty? to))         (assoc :to (keyword to))
+        (not (empty? promotion))  (assoc :promotion (parse-type promotion))
+        (not (empty? check?))     (assoc :check? true)
+        (not (empty? checkmate?)) (assoc :checkmate? true)))))
 
 (defn parse-moves
   [pgn-without-metadata]
