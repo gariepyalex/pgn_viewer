@@ -4,5 +4,6 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :resource-paths ["resources"]
+  :main lab3.core
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [quil "2.3.0"]])
