@@ -47,6 +47,14 @@
 
 (def column-names (set (map #(keyword (str %)) "abcdefg")))
 
+(defn pos-translation
+  [pos i-translation j-translation]
+  (-> pos
+      (#(get pos->coordinate %))
+      (update 0 + i-translation)
+      (update 1 + j-translation)
+      (#(get coordinate->pos %))))
+
 (defn in-column?
   [pos column]
   (= (first (name pos)) (first (name column))))
@@ -191,6 +199,19 @@
         (assoc :c8 {:type :king :color :black})
         (assoc :d8 {:type :rook :color :black}))))
 
+(defn handle-en-passant
+  [board piece-type piece-color take? to]
+  (if (and take? (= :pawn piece-type) (nil? (get board to)))
+    (let [en-passant-pos (pos-translation to (if (= :white piece-color) -1 1) 0)]
+      (assoc board en-passant-pos nil))
+    board))
+
+(defn handle-promotion
+  [board promotion to]
+  (if promotion
+    (assoc-in board [to :type] promotion)
+    board))
+
 (defmethod move
   :move
   [board {:as move :keys [color type to from take? promotion] :or {type :pawn}}]
@@ -198,8 +219,7 @@
                        [from (get board from)]
                        (piece-that-moves board color type to take? (when (contains? column-names from) from)))]
       (-> board
+          (handle-en-passant type color take? to)
           (assoc from nil)
           (assoc to piece)
-          (#(if promotion
-              (assoc-in % [to :type] promotion)
-              %)))))
+          (handle-promotion promotion to))))
